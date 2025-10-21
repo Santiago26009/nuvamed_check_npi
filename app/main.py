@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
 import httpx
-import os
 import logging
 from dotenv import load_dotenv
 from slowapi import Limiter
@@ -14,17 +13,6 @@ from slowapi.errors import RateLimitExceeded
 # Load environment variables
 # -------------------------------------------------
 load_dotenv()
-
-NV_ORIGIN = os.getenv("NV_ORIGIN")
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS")
-
-if not NV_ORIGIN:
-    NV_ORIGIN = "http://localhost:3000"
-
-if not ALLOWED_HOSTS:
-    ALLOWED_HOSTS = "localhost,127.0.0.1"
-
-ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS.split(",")]
 
 # -------------------------------------------------
 # Logging
@@ -40,15 +28,10 @@ app = FastAPI(title="NPI Proxy API")
 # -------------------------------------------------
 # CORS Configuration
 # -------------------------------------------------
-origins = [
-    NV_ORIGIN,
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -59,7 +42,6 @@ app.add_middleware(
 # -------------------------------------------------
 app.add_middleware(
     TrustedHostMiddleware,
-    allowed_hosts=[host.strip() for host in ALLOWED_HOSTS],
 )
 
 # -------------------------------------------------
