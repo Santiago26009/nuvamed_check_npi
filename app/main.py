@@ -82,6 +82,10 @@ NPPES_API = "https://npiregistry.cms.hhs.gov/api/"
 HTTP_TIMEOUT = httpx.Timeout(5.0)
 HTTP_LIMITS = httpx.Limits(max_keepalive_connections=5, max_connections=10)
 
+@app.get("/")
+def home():
+    return {"message": "Welcome to the NPI Proxy API"}
+
 # -------------------------------------------------
 # Endpoint: /check-npi
 # -------------------------------------------------
